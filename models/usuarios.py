@@ -8,6 +8,7 @@ Sessao persistida por 30 dias apos login voluntario.
 
 import hashlib
 import os
+from typing import Optional
 from database import get_db
 
 
@@ -17,7 +18,7 @@ def _hash_senha(senha: str) -> str:
     return hashlib.sha256(f"{salt}{senha}".encode()).hexdigest()
 
 
-def criar_usuario(nome: str, email: str, senha: str, tipo: str = "aluno") -> dict | None:
+def criar_usuario(nome: str, email: str, senha: str, tipo: str = "aluno") -> Optional[dict]:
     """
     Cria um novo usuario no banco.
     Retorna o usuario criado ou None se o email ja existir.
@@ -47,7 +48,7 @@ def criar_usuario(nome: str, email: str, senha: str, tipo: str = "aluno") -> dic
     return {"id": usuario_id, "nome": nome, "email": email, "tipo": tipo}
 
 
-def autenticar_usuario(email: str, senha: str) -> dict | None:
+def autenticar_usuario(email: str, senha: str) -> Optional[dict]:
     """
     Verifica credenciais. Retorna dados do usuario ou None se invalido.
     """
@@ -67,7 +68,7 @@ def autenticar_usuario(email: str, senha: str) -> dict | None:
     return None
 
 
-def buscar_usuario_por_id(usuario_id: int) -> dict | None:
+def buscar_usuario_por_id(usuario_id: int) -> Optional[dict]:
     """Busca usuario pelo ID (usado para recarregar sessao)."""
     conn = get_db()
     usuario = conn.execute(

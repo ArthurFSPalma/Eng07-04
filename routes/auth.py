@@ -22,7 +22,7 @@ SESSION_DURATION = timedelta(days=30)
 # Helpers
 # ---------------------------------------------------------------------------
 
-def usuario_logado() -> dict | None:
+def usuario_logado():
     """Retorna dados do usuario logado ou None (sessao anonima)."""
     usuario_id = session.get('usuario_id')
     if usuario_id:
