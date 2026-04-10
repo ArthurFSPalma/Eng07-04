@@ -258,16 +258,18 @@ body {
 }
 
 .resumo-numeros {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
     margin-bottom: 10px;
 }
 
 .numero-box {
-    flex: 1;
     text-align: center;
     padding: 8px 4px;
     border-radius: 8px;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .numero-box.livre { background: #f0fdf4; }
@@ -291,6 +293,9 @@ body {
     color: #9ca3af;
     text-transform: uppercase;
     letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .barra-progresso {
