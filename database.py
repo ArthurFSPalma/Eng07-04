@@ -38,7 +38,7 @@ def init_db():
             numero TEXT NOT NULL,
             tipo TEXT NOT NULL CHECK(tipo IN ('aluno', 'funcionario')),
             status TEXT NOT NULL DEFAULT 'livre' CHECK(status IN ('livre', 'ocupada')),
-            reservado INTEGER NOT NULL DEFAULT 0 CHECK(reservado IN (0, 1)),
+            reservado_por TEXT DEFAULT NULL CHECK(reservado_por IN (NULL, 'aluno', 'funcionario')),
             atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (setor_id) REFERENCES setores(id)
         );
@@ -53,13 +53,6 @@ def init_db():
             criado_em   DATETIME DEFAULT CURRENT_TIMESTAMP
         );
     ''')
-
-    # Migracao simples para bancos antigos que ainda nao possuem a coluna.
-    colunas_vagas = [c[1] for c in cursor.execute("PRAGMA table_info(vagas)").fetchall()]
-    if "reservado" not in colunas_vagas:
-        cursor.execute(
-            "ALTER TABLE vagas ADD COLUMN reservado INTEGER NOT NULL DEFAULT 0 CHECK(reservado IN (0, 1))"
-        )
 
     conn.commit()
     conn.close()

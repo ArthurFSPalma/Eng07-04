@@ -210,10 +210,12 @@ body {
     display: inline-block;
 }
 
-.legenda-cor.livre { background-color: #86efac; }
+.legenda-cor.livre-aluno { background-color: #86efac; }
+.legenda-cor.livre-func { background-color: #6ee7b7; border: 2px solid #a78bfa; }
 .legenda-cor.ocupada { background-color: #fca5a5; }
-.legenda-cor.reservada { background-color: #d8b4fe; }
-.legenda-cor.reserva-aluno { background-color: #93c5fd; }
+.legenda-cor.reserva-aluno { background-color: #7dd3fc; }
+.legenda-cor.reserva-func { background-color: #c4b5fd; }
+.legenda-cor.ocupada-func { background-color: #f9a8d4; }
 
 /* === RESUMO DOS SETORES === */
 .resumo-section {
@@ -272,10 +274,10 @@ body {
     overflow: hidden;
 }
 
-.numero-box.livre { background: #f0fdf4; }
-.numero-box.ocupada { background: #fef2f2; }
-.numero-box.reservada { background: #faf5ff; }
-.numero-box.reserva-aluno { background: #eff6ff; }
+.numero-box.livres { background: #f0fdf4; }
+.numero-box.ocupadas { background: #fef2f2; }
+.numero-box.res-func { background: #ede9fe; }
+.numero-box.res-aluno { background: #e0f2fe; }
 
 .numero-box .numero {
     display: block;
@@ -283,10 +285,10 @@ body {
     font-weight: 700;
 }
 
-.numero-box.livre .numero { color: #16a34a; }
-.numero-box.ocupada .numero { color: #dc2626; }
-.numero-box.reservada .numero { color: #9333ea; }
-.numero-box.reserva-aluno .numero { color: #2563eb; }
+.numero-box.livres .numero { color: #16a34a; }
+.numero-box.ocupadas .numero { color: #dc2626; }
+.numero-box.res-func .numero { color: #7c3aed; }
+.numero-box.res-aluno .numero { color: #0284c7; }
 
 .numero-box .label {
     font-size: 0.65rem;
@@ -399,50 +401,78 @@ body {
     box-shadow: 0 4px 14px rgba(0,0,0,0.12);
 }
 
-.vaga.livre {
-    background-color: #86efac;
+/* Estado 1: Livre (vaga de aluno) — verde claro */
+.vaga.livre-aluno {
+    background-color: #bbf7d0;
     color: #166534;
 }
 
-.vaga.ocupada {
-    background-color: #fca5a5;
+/* Estado 2: Livre (vaga de funcionario) — verde menta com borda roxa */
+.vaga.livre-func {
+    background-color: #a7f3d0;
+    color: #065f46;
+    border: 2px solid #c4b5fd;
+}
+
+/* Estado 3: Ocupada (vaga de aluno) — coral */
+.vaga.ocupada-aluno {
+    background-color: #fecaca;
     color: #991b1b;
 }
 
-.vaga.reservada {
-    background-color: #d8b4fe;
-    color: #581c87;
-    border: 2px dashed #c084fc;
+/* Estado 4: Ocupada (vaga de funcionario) — rosa com borda roxa */
+.vaga.ocupada-func {
+    background-color: #fbcfe8;
+    color: #9d174d;
+    border: 2px solid #c4b5fd;
 }
 
-.vaga.reservada .vaga-icon-lock {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    width: 10px;
-    height: 10px;
-    color: #7c3aed;
-}
-
-/* Vaga de funcionario NAO reservada — verde/vermelho com borda roxa sutil */
-.vaga.func-vaga {
-    border: 2px solid #d8b4fe;
-}
-
-.vaga.func-vaga .vaga-icon-lock {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    width: 10px;
-    height: 10px;
-    color: #9333ea;
-    opacity: 0.6;
-}
-
+/* Estado 5: Reservada por aluno — azul celeste */
 .vaga.reserva-aluno {
-    background-color: #93c5fd;
-    color: #1e3a5f;
-    border: 2px dashed #60a5fa;
+    background-color: #7dd3fc;
+    color: #0c4a6e;
+    border: 2px solid #38bdf8;
+}
+
+/* Estado 6: Reservada por funcionario — roxo/violeta */
+.vaga.reserva-func {
+    background-color: #c4b5fd;
+    color: #4c1d95;
+    border: 2px solid #a78bfa;
+}
+
+/* Indicador pequeno no canto */
+.vaga .vaga-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vaga .vaga-badge svg {
+    width: 8px;
+    height: 8px;
+}
+
+.vaga.livre-func .vaga-badge,
+.vaga.ocupada-func .vaga-badge {
+    background: #a78bfa;
+    color: white;
+}
+
+.vaga.reserva-func .vaga-badge {
+    background: #7c3aed;
+    color: white;
+}
+
+.vaga.reserva-aluno .vaga-badge {
+    background: #0ea5e9;
+    color: white;
 }
 
 .vaga .vaga-numero {
@@ -527,10 +557,12 @@ body {
     height: 22px;
 }
 
-.modal-vaga-badge.livre { background: #4ade80; }
-.modal-vaga-badge.ocupada { background: #f87171; }
-.modal-vaga-badge.reservada { background: #a855f7; }
-.modal-vaga-badge.reserva-aluno { background: #60a5fa; }
+.modal-vaga-badge.livre-aluno { background: #4ade80; }
+.modal-vaga-badge.livre-func { background: #34d399; }
+.modal-vaga-badge.ocupada-aluno { background: #f87171; }
+.modal-vaga-badge.ocupada-func { background: #f472b6; }
+.modal-vaga-badge.reserva-aluno { background: #38bdf8; }
+.modal-vaga-badge.reserva-func { background: #a78bfa; }
 
 .modal-info {
     margin-bottom: 14px;

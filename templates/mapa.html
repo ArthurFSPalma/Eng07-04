@@ -2,22 +2,16 @@
 
 {% block content %}
 
-<!-- LEGENDA -->
+<!-- LEGENDA — 6 estados -->
 <section class="legenda-section">
     <h3>Legenda</h3>
     <div class="legenda">
-        <span class="legenda-item">
-            <span class="legenda-cor livre"></span> Livre (Aluno)
-        </span>
-        <span class="legenda-item">
-            <span class="legenda-cor ocupada"></span> Ocupada (Aluno)
-        </span>
-        <span class="legenda-item">
-            <span class="legenda-cor reservada"></span> Reservada (Funcionario)
-        </span>
-        <span class="legenda-item">
-            <span class="legenda-cor reserva-aluno"></span> Reservada (Aluno)
-        </span>
+        <span class="legenda-item"><span class="legenda-cor livre-aluno"></span> Livre (Aluno)</span>
+        <span class="legenda-item"><span class="legenda-cor livre-func"></span> Livre (Func.)</span>
+        <span class="legenda-item"><span class="legenda-cor ocupada"></span> Ocupada</span>
+        <span class="legenda-item"><span class="legenda-cor ocupada-func"></span> Ocupada (Func.)</span>
+        <span class="legenda-item"><span class="legenda-cor reserva-aluno"></span> Reserv. Aluno</span>
+        <span class="legenda-item"><span class="legenda-cor reserva-func"></span> Reserv. Func.</span>
     </div>
 </section>
 
@@ -29,21 +23,21 @@
         <div class="resumo-card" data-setor-id="{{ setor.id }}">
             <h3>{{ setor.nome }}</h3>
             <div class="resumo-numeros">
-                <div class="numero-box livre">
+                <div class="numero-box livres">
                     <span class="numero" id="livres-{{ setor.id }}">{{ setor.livres }}</span>
                     <span class="label">Livres</span>
                 </div>
-                <div class="numero-box ocupada">
+                <div class="numero-box ocupadas">
                     <span class="numero" id="ocupadas-{{ setor.id }}">{{ setor.ocupadas }}</span>
                     <span class="label">Ocupadas</span>
                 </div>
-                <div class="numero-box reservada">
-                    <span class="numero" id="reservadas-{{ setor.id }}">{{ setor.reservadas_funcionario }}</span>
-                    <span class="label">Funcionarios</span>
+                <div class="numero-box res-func">
+                    <span class="numero" id="res-func-{{ setor.id }}">{{ setor.reservadas_func }}</span>
+                    <span class="label">Res. Func.</span>
                 </div>
-                <div class="numero-box reserva-aluno">
-                    <span class="numero" id="reservadas-aluno-{{ setor.id }}">{{ setor.reservadas_aluno }}</span>
-                    <span class="label">Reserv. Aluno</span>
+                <div class="numero-box res-aluno">
+                    <span class="numero" id="res-aluno-{{ setor.id }}">{{ setor.reservadas_aluno }}</span>
+                    <span class="label">Res. Aluno</span>
                 </div>
             </div>
             <div class="barra-progresso">
