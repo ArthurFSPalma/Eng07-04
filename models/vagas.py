@@ -242,3 +242,42 @@ def desreservar_vaga(vaga_id, usuario_tipo="aluno"):
     conn.commit()
     conn.close()
     return {"sucesso": True, "mensagem": f"Reserva da vaga {vaga['numero']} removida."}
+
+
+# =====================================================
+# ADMIN: ALTERAR TIPO DA VAGA
+# =====================================================
+
+def alterar_tipo_vaga(vaga_id, novo_tipo):
+    """
+    Admin pode redefinir o tipo de uma vaga (aluno <-> funcionario).
+    Remove qualquer reserva existente ao trocar o tipo.
+    """
+    conn = get_db()
+    vaga = conn.execute("SELECT * FROM vagas WHERE id = ?", (vaga_id,)).fetchone()
+
+    if not vaga:
+        conn.close()
+        return {"sucesso": False, "erro": "Vaga nao encontrada."}
+
+    if novo_tipo not in ("aluno", "funcionario"):
+        conn.close()
+        return {"sucesso": False, "erro": "Tipo invalido. Use 'aluno' ou 'funcionario'."}
+
+    if vaga["tipo"] == novo_tipo:
+        conn.close()
+        return {"sucesso": False, "erro": f"Vaga ja e do tipo '{novo_tipo}'."}
+
+    agora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    conn.execute(
+        "UPDATE vagas SET tipo = ?, reservado_por = NULL, status = 'livre', atualizado_em = ? WHERE id = ?",
+        (novo_tipo, agora, vaga_id)
+    )
+    conn.commit()
+    conn.close()
+
+    tipo_anterior = vaga["tipo"]
+    return {
+        "sucesso": True,
+        "mensagem": f"Vaga {vaga['numero']} alterada de '{tipo_anterior}' para '{novo_tipo}'. Reserva e status resetados."
+    }

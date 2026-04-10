@@ -5,9 +5,11 @@ Usa reservado_por (aluno/funcionario/null)
 
 from flask import Blueprint, jsonify, request, session
 from routes.auth import login_requerido
+from routes.auth import admin_requerido
 from models.vagas import (
     get_vagas_reservadas, get_vaga_by_id,
-    atualizar_status_vaga, reservar_vaga, desreservar_vaga
+    atualizar_status_vaga, reservar_vaga, desreservar_vaga,
+    alterar_tipo_vaga
 )
 
 reservadas_bp = Blueprint('reservadas', __name__)
@@ -60,4 +62,15 @@ def api_reservar_vaga(vaga_id):
 @login_requerido
 def api_desreservar_vaga(vaga_id):
     resultado = desreservar_vaga(vaga_id, _tipo_usuario())
+    return jsonify(resultado), 200 if resultado["sucesso"] else 400
+
+
+@reservadas_bp.route('/api/vagas/<int:vaga_id>/tipo', methods=['POST'])
+@admin_requerido
+def api_alterar_tipo(vaga_id):
+    """Admin define se a vaga e para aluno ou funcionario."""
+    dados = request.get_json()
+    if not dados or 'tipo' not in dados:
+        return jsonify({"sucesso": False, "erro": "Envie JSON com campo 'tipo' ('aluno' ou 'funcionario')."}), 400
+    resultado = alterar_tipo_vaga(vaga_id, dados['tipo'])
     return jsonify(resultado), 200 if resultado["sucesso"] else 400

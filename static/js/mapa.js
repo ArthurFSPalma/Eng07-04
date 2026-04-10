@@ -233,6 +233,19 @@ async function abrirModal(vagaId) {
 
         html += '<button class="btn btn-fechar" onclick="fecharModal()">Fechar</button></div>';
 
+        // Admin: botao para alterar tipo da vaga
+        if (userTipo === 'admin') {
+            const outroTipo = vaga.tipo === 'aluno' ? 'funcionario' : 'aluno';
+            const label = outroTipo === 'funcionario' ? 'Funcionario' : 'Aluno';
+            html += `<div style="margin-top:12px;padding-top:12px;border-top:1px solid #f3f4f6">
+                <p style="font-size:0.78rem;color:#9ca3af;margin-bottom:6px">ADMIN — Definir tipo da vaga</p>
+                <div style="display:flex;gap:8px">
+                    <button class="btn btn-tipo-aluno" onclick="alterarTipoVaga(${vaga.id},'aluno')" ${vaga.tipo==='aluno'?'disabled':''} style="flex:1">Vaga Aluno</button>
+                    <button class="btn btn-tipo-func" onclick="alterarTipoVaga(${vaga.id},'funcionario')" ${vaga.tipo==='funcionario'?'disabled':''} style="flex:1">Vaga Func.</button>
+                </div>
+            </div>`;
+        }
+
         body.innerHTML = html;
         modal.style.display = 'flex';
     } catch (e) {
@@ -265,6 +278,14 @@ async function reservarVaga(vagaId) {
 async function desreservarVaga(vagaId) {
     try {
         const r = await fetch(`/api/vagas/${vagaId}/desreservar`, { method:'POST' });
+        const d = await r.json();
+        if (d.sucesso) { fecharModal(); atualizarMapa(); } else { alert(d.erro); }
+    } catch(e) { alert('Erro de conexao.'); }
+}
+
+async function alterarTipoVaga(vagaId, novoTipo) {
+    try {
+        const r = await fetch(`/api/vagas/${vagaId}/tipo`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tipo:novoTipo}) });
         const d = await r.json();
         if (d.sucesso) { fecharModal(); atualizarMapa(); } else { alert(d.erro); }
     } catch(e) { alert('Erro de conexao.'); }

@@ -634,6 +634,9 @@ body {
 .btn-desreservar { background: #fb923c; color: #fff; }
 .btn-fechar { background: #f3f4f6; color: #6b7280; }
 
+.btn-tipo-aluno { background: #bbf7d0; color: #166534; }
+.btn-tipo-func { background: #c4b5fd; color: #4c1d95; }
+
 .btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
