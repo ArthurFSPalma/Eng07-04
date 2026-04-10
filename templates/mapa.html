@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- =============================== -->
+<!-- RF01: LEGENDA DO MAPA           -->
+<!-- RF03: Inclui tipo reservada     -->
+<!-- =============================== -->
+<section class="legenda-section">
+    <h3>Legenda</h3>
+    <div class="legenda">
+        <span class="legenda-item">
+            <span class="legenda-cor livre"></span> Livre (Aluno)
+        </span>
+        <span class="legenda-item">
+            <span class="legenda-cor ocupada"></span> Ocupada (Aluno)
+        </span>
+        <span class="legenda-item">
+            <span class="legenda-cor reservada"></span> 🔒 Reservada (Funcionario)
+        </span>
+    </div>
+</section>
+
+<!-- =============================== -->
+<!-- RF01: RESUMO DOS SETORES        -->
+<!-- =============================== -->
+<section class="resumo-section">
+    <h2>Resumo por Setor</h2>
+    <div class="resumo-grid" id="resumo-setores">
+        {% for setor in setores %}
+        <div class="resumo-card" data-setor-id="{{ setor.id }}">
+            <h3>{{ setor.nome }}</h3>
+            <div class="resumo-numeros">
+                <div class="numero-box livre">
+                    <span class="numero" id="livres-{{ setor.id }}">{{ setor.livres }}</span>
+                    <span class="label">Livres</span>
+                </div>
+                <div class="numero-box ocupada">
+                    <span class="numero" id="ocupadas-{{ setor.id }}">{{ setor.ocupadas }}</span>
+                    <span class="label">Ocupadas</span>
+                </div>
+                <div class="numero-box reservada">
+                    <span class="numero" id="reservadas-{{ setor.id }}">{{ setor.reservadas_funcionario }}</span>
+                    <span class="label">Funcionarios</span>
+                </div>
+            </div>
+            <div class="barra-progresso">
+                {% set percentual_livre = (setor.livres / setor.total_vagas * 100) if setor.total_vagas > 0 else 0 %}
+                <div class="barra-fill" style="width: {{ percentual_livre|round|int }}%"></div>
+            </div>
+            <small>{{ percentual_livre|round|int }}% disponivel</small>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- =============================== -->
+<!-- RF01: MAPA DE VAGAS POR SETOR   -->
+<!-- RF03: Vagas reservadas em roxo   -->
+<!-- =============================== -->
+<section class="mapa-section">
+    <h2>Mapa de Vagas</h2>
+    <p class="mapa-instrucao">Clique em uma vaga para ver detalhes. Vagas de alunos podem ter o status atualizado.</p>
+
+    <div id="mapa-vagas">
+        <!-- Preenchido via JavaScript (polling AJAX) -->
+        <div class="loading">Carregando mapa de vagas...</div>
+    </div>
+</section>
+
+<!-- =============================== -->
+<!-- RF03: MODAL DE DETALHES DA VAGA -->
+<!-- =============================== -->
+<div id="modal-vaga" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="modal-close" onclick="fecharModal()">&times;</span>
+        <div id="modal-body">
+            <!-- Preenchido via JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- =============================== -->
+<!-- RF01: TIMER DE ATUALIZACAO      -->
+<!-- =============================== -->
+<div class="auto-refresh-bar">
+    <span>Proxima atualizacao em: <strong id="countdown">60</strong>s</span>
+    <button onclick="atualizarMapa()" class="btn-atualizar">🔄 Atualizar Agora</button>
+</div>
+
+{% endblock %}

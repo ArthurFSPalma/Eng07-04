@@ -1,0 +1,530 @@
+/* ========================================
+   ESTACIONAMENTO DO CAMPUS - Estilos
+   RF01: Mapa de Vagas em Tempo Real
+   RF03: Identificacao de Vagas Reservadas
+   ======================================== */
+
+/* === RESET E BASE === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* === HEADER === */
+.header {
+    background: linear-gradient(135deg, #1a237e, #283593);
+    color: white;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.header h1 {
+    font-size: 1.4rem;
+}
+
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-badge.online { background: rgba(76, 175, 80, 0.2); }
+.status-badge.offline { background: rgba(244, 67, 54, 0.2); }
+
+.timestamp {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* === CONTAINER === */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* === LEGENDA (RF01 + RF03) === */
+.legenda-section {
+    background: white;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.legenda-section h3 {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.legenda {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+
+.legenda-cor {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.legenda-cor.livre { background-color: #4caf50; }
+.legenda-cor.ocupada { background-color: #f44336; }
+.legenda-cor.reservada { background-color: #7b1fa2; }
+
+/* === RESUMO DOS SETORES (RF01) === */
+.resumo-section {
+    margin-bottom: 25px;
+}
+
+.resumo-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #1a237e;
+}
+
+.resumo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.resumo-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.resumo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* RF03: Destaque do setor da Biblioteca */
+.resumo-card[data-setor-id="1"] {
+    border-left: 4px solid #7b1fa2;
+}
+
+.resumo-card h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.resumo-numeros {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.numero-box {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.numero-box.livre { background: #e8f5e9; }
+.numero-box.ocupada { background: #ffebee; }
+.numero-box.reservada { background: #f3e5f5; }
+
+.numero-box .numero {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.numero-box.livre .numero { color: #2e7d32; }
+.numero-box.ocupada .numero { color: #c62828; }
+.numero-box.reservada .numero { color: #7b1fa2; }
+
+.numero-box .label {
+    font-size: 0.7rem;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.barra-progresso {
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.barra-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #66bb6a);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+/* === MAPA DE VAGAS (RF01 + RF03) === */
+.mapa-section {
+    margin-bottom: 25px;
+}
+
+.mapa-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #1a237e;
+}
+
+.mapa-instrucao {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.setor-bloco {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* RF03: Borda especial para setor da Biblioteca */
+.setor-bloco.biblioteca {
+    border: 2px solid #7b1fa2;
+    position: relative;
+}
+
+.setor-bloco.biblioteca::before {
+    content: "🔒 Area com vagas de funcionarios";
+    position: absolute;
+    top: -12px;
+    left: 15px;
+    background: #7b1fa2;
+    color: white;
+    padding: 2px 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.setor-bloco h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.vagas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 8px;
+}
+
+/* Cada vaga individual */
+.vaga {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.vaga:hover {
+    transform: scale(1.1);
+    z-index: 5;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* RF01: Cores por status */
+.vaga.livre {
+    background-color: #4caf50;
+    color: white;
+}
+
+.vaga.ocupada {
+    background-color: #f44336;
+    color: white;
+}
+
+/* RF03: Cor distinta para vagas reservadas */
+.vaga.reservada {
+    background-color: #7b1fa2;
+    color: white;
+    border: 2px dashed #e1bee7;
+}
+
+.vaga.reservada::after {
+    content: "🔒";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.6rem;
+}
+
+.vaga .vaga-numero {
+    font-size: 0.75rem;
+}
+
+.vaga .vaga-status-icon {
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+/* === MODAL (RF03) === */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 420px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+.modal-vaga-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.modal-vaga-badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.modal-vaga-badge.livre { background: #4caf50; }
+.modal-vaga-badge.ocupada { background: #f44336; }
+.modal-vaga-badge.reservada { background: #7b1fa2; }
+
+.modal-info {
+    margin-bottom: 15px;
+}
+
+.modal-info p {
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.modal-info strong {
+    color: #333;
+}
+
+/* RF03: Alerta de vaga reservada */
+.alerta-reservada {
+    background: #fce4ec;
+    border: 1px solid #ef9a9a;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+.alerta-reservada .alerta-titulo {
+    color: #c62828;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+}
+
+.alerta-reservada .alerta-texto {
+    color: #b71c1c;
+    font-size: 0.85rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn-livre {
+    background: #4caf50;
+    color: white;
+}
+
+.btn-ocupada {
+    background: #f44336;
+    color: white;
+}
+
+.btn-fechar {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* === AUTO-REFRESH BAR (RF01) === */
+.auto-refresh-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.85rem;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+    z-index: 50;
+}
+
+.btn-atualizar {
+    background: #1a237e;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-atualizar:hover {
+    background: #283593;
+}
+
+/* === LOADING === */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1rem;
+}
+
+/* === FOOTER === */
+.footer {
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 50px;
+    color: #999;
+    font-size: 0.8rem;
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 768px) {
+    .header h1 { font-size: 1.1rem; }
+    .resumo-grid { grid-template-columns: 1fr; }
+    .vagas-grid { grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); }
+    .vaga { font-size: 0.6rem; }
+}
+
+/* === MODO OFFLINE (RF01) === */
+.offline-banner {
+    background: #fff3e0;
+    border: 1px solid #ffb74d;
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #e65100;
+    display: none;
+}
+
+.offline-banner.visivel {
+    display: block;
+}
