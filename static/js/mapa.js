@@ -103,20 +103,31 @@ function renderizarMapa(vagas) {
         setor.vagas.forEach(vaga => {
             let classeVaga = '';
             let icone = '';
+            let lockIcon = '';
 
-            if (vaga.tipo === 'funcionario') {
+            if (vaga.tipo === 'funcionario' && vaga.reservado === 1) {
+                // Vaga de funcionario RESERVADA -> roxo com cadeado
                 classeVaga = 'reservada';
-                icone = vaga.status === 'livre' ? SVG.lockOpen : SVG.lock;
-            } else if (vaga.reservado === 1) {
+                icone = SVG.lock;
+                lockIcon = SVG.lockSmall;
+            } else if (vaga.tipo === 'funcionario' && vaga.reservado === 0) {
+                // Vaga de funcionario NAO reservada -> livre/ocupada normal mas com marcador
+                classeVaga = vaga.status + ' func-vaga';
+                icone = vaga.status === 'livre' ? SVG.check : SVG.car;
+                lockIcon = SVG.lockSmall;
+            } else if (vaga.tipo === 'aluno' && vaga.reservado === 1) {
+                // Vaga de aluno RESERVADA -> azul
                 classeVaga = 'reserva-aluno';
                 icone = SVG.bookmark;
             } else {
+                // Vaga de aluno normal
                 classeVaga = vaga.status;
                 icone = vaga.status === 'livre' ? SVG.check : SVG.car;
             }
 
-            const lockIcon = vaga.tipo === 'funcionario' ? SVG.lockSmall : '';
-            const titleText = vaga.tipo === 'funcionario' ? 'RESERVADA FUNCIONARIO' : (vaga.reservado === 1 ? 'RESERVADA ALUNO' : vaga.status);
+            const titleText = (vaga.reservado === 1)
+                ? (vaga.tipo === 'funcionario' ? 'RESERVADA FUNCIONARIO' : 'RESERVADA ALUNO')
+                : vaga.status;
 
             html += `
                 <div class="vaga ${classeVaga}"
@@ -187,51 +198,68 @@ async function abrirModal(vagaId) {
         }
 
         const vaga = dados.vaga;
-        const isReservada = dados.is_reservada;
-        const isReservadaAluno = vaga.tipo === 'aluno' && vaga.reservado === 1;
-        const classeStatus = isReservada ? 'reservada' : (isReservadaAluno ? 'reserva-aluno' : vaga.status);
+        const userTipo = dados.usuario_tipo || 'aluno';
+        const isVagaFunc = vaga.tipo === 'funcionario';
+        const isReservado = vaga.reservado === 1;
+        const isReservadaFunc = isVagaFunc && isReservado;
+        const isReservadaAluno = !isVagaFunc && isReservado;
+
+        // Classe visual do badge
+        let classeStatus = vaga.status;
+        if (isReservadaFunc) classeStatus = 'reservada';
+        else if (isReservadaAluno) classeStatus = 'reserva-aluno';
 
         let html = '';
 
+        // Header
         html += '<div class="modal-vaga-header">';
         html += `<div class="modal-vaga-badge ${classeStatus}">`;
-        html += isReservada ? SVG.lockBadge : (vaga.status === 'livre' ? SVG.checkBadge : SVG.carBadge);
+        html += isReservado ? SVG.lockBadge : (vaga.status === 'livre' ? SVG.checkBadge : SVG.carBadge);
         html += '</div>';
         html += '<div>';
         html += `<h2 style="font-size:1.2rem;color:#1f2937">Vaga ${vaga.numero}</h2>`;
         html += `<p style="color:#9ca3af;font-size:0.82rem">${vaga.setor_nome}</p>`;
         html += '</div></div>';
 
+        // Info
         html += '<div class="modal-info">';
-        const statusTexto = isReservadaAluno ? 'Reservada (Aluno)' : (vaga.status === 'livre' ? 'Livre' : 'Ocupada');
+        let statusTexto = vaga.status === 'livre' ? 'Livre' : 'Ocupada';
+        if (isReservadaFunc) statusTexto = 'Reservada (Funcionario)';
+        else if (isReservadaAluno) statusTexto = 'Reservada (Aluno)';
         html += `<p><strong>Status:</strong> ${statusTexto}</p>`;
-        html += `<p><strong>Tipo:</strong> ${vaga.tipo === 'funcionario' ? 'Funcionario' : 'Aluno'}</p>`;
+        html += `<p><strong>Tipo de vaga:</strong> ${isVagaFunc ? 'Funcionario' : 'Aluno'}</p>`;
         html += `<p><strong>Atualizado:</strong> ${vaga.atualizado_em}</p>`;
         html += '</div>';
 
-        if (isReservada && dados.restricao) {
+        // Alerta para alunos em vagas de funcionario
+        if (isVagaFunc && userTipo === 'aluno' && dados.restricao) {
             html += '<div class="alerta-reservada">';
-            html += `<div class="alerta-titulo">${SVG.alertTri} VAGA RESERVADA</div>`;
+            html += `<div class="alerta-titulo">${SVG.alertTri} VAGA DE FUNCIONARIO</div>`;
             html += `<div class="alerta-texto">${dados.restricao.mensagem}</div>`;
-            html += `<div class="alerta-texto" style="margin-top:3px"><strong>Autorizado:</strong> ${dados.restricao.tipo_autorizado}</div>`;
             html += `<div class="alerta-texto" style="margin-top:3px">${dados.restricao.alerta}</div>`;
             html += '</div>';
         }
 
+        // Botoes
         html += '<div class="modal-actions">';
 
-        if (isReservada) {
-            html += '<button class="btn btn-livre" disabled>Marcar Livre</button>';
-            html += '<button class="btn btn-ocupada" disabled>Marcar Ocupada</button>';
-        } else {
-            html += `<button class="btn btn-livre" onclick="alterarStatus(${vaga.id}, 'livre')" ${(vaga.status === 'livre' || isReservadaAluno) ? 'disabled' : ''}>Livre</button>`;
-            html += `<button class="btn btn-ocupada" onclick="alterarStatus(${vaga.id}, 'ocupada')" ${(vaga.status === 'ocupada' || isReservadaAluno) ? 'disabled' : ''}>Ocupada</button>`;
+        const podeAlterar = (isVagaFunc && (userTipo === 'funcionario' || userTipo === 'admin'))
+                         || (!isVagaFunc && (userTipo === 'aluno' || userTipo === 'admin'));
 
-            if (isReservadaAluno) {
+        if (podeAlterar) {
+            // Botoes de status (desabilitados se reservado)
+            html += `<button class="btn btn-livre" onclick="alterarStatus(${vaga.id}, 'livre')" ${(vaga.status === 'livre' || isReservado) ? 'disabled' : ''}>Livre</button>`;
+            html += `<button class="btn btn-ocupada" onclick="alterarStatus(${vaga.id}, 'ocupada')" ${(vaga.status === 'ocupada' || isReservado) ? 'disabled' : ''}>Ocupada</button>`;
+
+            // Reservar / Desreservar
+            if (isReservado) {
                 html += `<button class="btn btn-desreservar" onclick="desreservarVaga(${vaga.id})">Desreservar</button>`;
             } else {
                 html += `<button class="btn btn-reservar" onclick="reservarVaga(${vaga.id})" ${vaga.status !== 'livre' ? 'disabled' : ''}>Reservar</button>`;
             }
+        } else {
+            // Usuario sem permissao nesta vaga
+            html += '<button class="btn btn-livre" disabled>Sem permissao</button>';
         }
 
         html += '<button class="btn btn-fechar" onclick="fecharModal()">Fechar</button>';

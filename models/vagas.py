@@ -137,36 +137,41 @@ def get_vagas_reservadas():
     return [dict(v) for v in vagas]
 
 
-def atualizar_status_vaga(vaga_id, novo_status):
+def atualizar_status_vaga(vaga_id, novo_status, usuario_tipo="aluno"):
     """
     Atualiza o status de uma vaga (livre/ocupada).
-    RF03: Impede que vagas de funcionarios sejam alteradas por alunos.
-
-    Retorna:
-        dict com sucesso/erro
+    - Alunos so podem alterar vagas tipo 'aluno'
+    - Funcionarios/admin podem alterar vagas tipo 'funcionario'
     """
     conn = get_db()
 
-    # Verifica se a vaga existe
     vaga = conn.execute("SELECT * FROM vagas WHERE id = ?", (vaga_id,)).fetchone()
     if not vaga:
         conn.close()
         return {"sucesso": False, "erro": "Vaga nao encontrada."}
 
-    # RF03: Bloqueia alteracao de vagas reservadas para funcionarios
-    if vaga["tipo"] == "funcionario":
+    # Aluno tentando alterar vaga de funcionario
+    if vaga["tipo"] == "funcionario" and usuario_tipo == "aluno":
         conn.close()
         return {
             "sucesso": False,
             "erro": "Vaga reservada para funcionarios. Alunos nao podem alterar o status desta vaga."
         }
 
-    # Reserva de aluno deve ser removida antes de trocar status manualmente.
+    # Funcionario tentando alterar vaga de aluno
+    if vaga["tipo"] == "aluno" and usuario_tipo in ("funcionario",):
+        conn.close()
+        return {
+            "sucesso": False,
+            "erro": "Funcionarios nao podem alterar vagas de alunos."
+        }
+
+    # Vaga reservada deve ser desreservada antes
     if vaga["reservado"] == 1:
         conn.close()
         return {
             "sucesso": False,
-            "erro": "Vaga reservada por aluno. Desreserve a vaga antes de alterar o status."
+            "erro": "Vaga reservada. Desreserve a vaga antes de alterar o status."
         }
 
     # Valida o status
@@ -204,7 +209,8 @@ def get_resumo_setores():
             COALESCE(SUM(CASE WHEN v.status = 'ocupada' AND v.tipo = 'aluno' THEN 1 ELSE 0 END), 0) AS ocupadas_aluno,
             COALESCE(SUM(CASE WHEN v.tipo = 'aluno' AND v.reservado = 1 THEN 1 ELSE 0 END), 0) AS reservadas_aluno,
             COALESCE(SUM(CASE WHEN v.tipo = 'funcionario' AND v.status = 'livre' THEN 1 ELSE 0 END), 0) AS livres_func,
-            COALESCE(SUM(CASE WHEN v.tipo = 'funcionario' AND v.status = 'ocupada' THEN 1 ELSE 0 END), 0) AS ocupadas_func
+            COALESCE(SUM(CASE WHEN v.tipo = 'funcionario' AND v.status = 'ocupada' THEN 1 ELSE 0 END), 0) AS ocupadas_func,
+            COALESCE(SUM(CASE WHEN v.tipo = 'funcionario' AND v.reservado = 1 THEN 1 ELSE 0 END), 0) AS reservadas_func
         FROM setores s
         LEFT JOIN vagas v ON v.setor_id = s.id
         GROUP BY s.id
@@ -214,8 +220,12 @@ def get_resumo_setores():
     return [dict(r) for r in resumo]
 
 
-def reservar_vaga(vaga_id):
-    """Reserva uma vaga de aluno que esteja livre."""
+def reservar_vaga(vaga_id, usuario_tipo="aluno"):
+    """
+    Reserva uma vaga.
+    - Aluno so pode reservar vaga tipo 'aluno'
+    - Funcionario/admin pode reservar vaga tipo 'funcionario'
+    """
     conn = get_db()
     vaga = conn.execute("SELECT * FROM vagas WHERE id = ?", (vaga_id,)).fetchone()
 
@@ -223,9 +233,15 @@ def reservar_vaga(vaga_id):
         conn.close()
         return {"sucesso": False, "erro": "Vaga nao encontrada."}
 
-    if vaga["tipo"] == "funcionario":
+    # Aluno tentando reservar vaga de funcionario
+    if vaga["tipo"] == "funcionario" and usuario_tipo == "aluno":
         conn.close()
-        return {"sucesso": False, "erro": "Vagas de funcionarios nao podem ser reservadas por alunos."}
+        return {"sucesso": False, "erro": "Alunos nao podem reservar vagas de funcionarios."}
+
+    # Funcionario/admin tentando reservar vaga de aluno
+    if vaga["tipo"] == "aluno" and usuario_tipo in ("funcionario", "admin"):
+        conn.close()
+        return {"sucesso": False, "erro": "Funcionarios devem reservar vagas do tipo funcionario."}
 
     if vaga["reservado"] == 1:
         conn.close()
@@ -246,8 +262,12 @@ def reservar_vaga(vaga_id):
     return {"sucesso": True, "mensagem": f"Vaga {vaga['numero']} reservada com sucesso."}
 
 
-def desreservar_vaga(vaga_id):
-    """Remove a reserva de uma vaga de aluno."""
+def desreservar_vaga(vaga_id, usuario_tipo="aluno"):
+    """
+    Remove a reserva de uma vaga.
+    - Aluno so pode desreservar vaga tipo 'aluno'
+    - Funcionario/admin pode desreservar vaga tipo 'funcionario'
+    """
     conn = get_db()
     vaga = conn.execute("SELECT * FROM vagas WHERE id = ?", (vaga_id,)).fetchone()
 
@@ -255,9 +275,13 @@ def desreservar_vaga(vaga_id):
         conn.close()
         return {"sucesso": False, "erro": "Vaga nao encontrada."}
 
-    if vaga["tipo"] == "funcionario":
+    if vaga["tipo"] == "funcionario" and usuario_tipo == "aluno":
         conn.close()
-        return {"sucesso": False, "erro": "Vagas de funcionarios nao usam reserva de aluno."}
+        return {"sucesso": False, "erro": "Alunos nao podem desreservar vagas de funcionarios."}
+
+    if vaga["tipo"] == "aluno" and usuario_tipo in ("funcionario", "admin"):
+        conn.close()
+        return {"sucesso": False, "erro": "Funcionarios nao podem desreservar vagas de alunos."}
 
     if vaga["reservado"] == 0:
         conn.close()
