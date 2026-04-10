@@ -42,6 +42,16 @@ def init_db():
             atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (setor_id) REFERENCES setores(id)
         );
+
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome        TEXT    NOT NULL,
+            email       TEXT    NOT NULL UNIQUE,
+            senha_hash  TEXT    NOT NULL,
+            tipo        TEXT    NOT NULL DEFAULT 'aluno'
+                                CHECK(tipo IN ('aluno', 'funcionario')),
+            criado_em   DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
     ''')
 
     # Migracao simples para bancos antigos que ainda nao possuem a coluna.
@@ -145,12 +155,31 @@ def seed_db():
         vagas
     )
 
+    # =====================================================
+    # USUARIOS DE EXEMPLO (RF04)
+    # =====================================================
+    import hashlib
+
+    def _hash(senha):
+        salt = "estacionamento_campus_salt"
+        return hashlib.sha256(f"{salt}{senha}".encode()).hexdigest()
+
+    usuarios_seed = [
+        ("Aluno Teste",       "aluno@campus.edu",       _hash("123456"), "aluno"),
+        ("Prof. Funcionario", "funcionario@campus.edu",  _hash("123456"), "funcionario"),
+    ]
+
+    cursor.executemany(
+        "INSERT OR IGNORE INTO usuarios (nome, email, senha_hash, tipo) VALUES (?, ?, ?, ?)",
+        usuarios_seed
+    )
+
     conn.commit()
     conn.close()
 
     total = sum(c["total"] for c in setor_configs)
     func = sum(c["funcionario_fim"] - max(c["funcionario_inicio"] - 1, 0) for c in setor_configs)
-    print(f"[DB] Seed concluido: {len(setores)} setores, {total} vagas ({func} de funcionarios).")
+    print(f"[DB] Seed concluido: {len(setores)} setores, {total} vagas ({func} de funcionarios), {len(usuarios_seed)} usuarios.")
 
 
 if __name__ == "__main__":
