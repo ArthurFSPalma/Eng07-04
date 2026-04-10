@@ -18,6 +18,9 @@
         <span class="legenda-item">
             <span class="legenda-cor reservada"></span> 🔒 Reservada (Funcionario)
         </span>
+        <span class="legenda-item">
+            <span class="legenda-cor reserva-aluno"></span> 🟦 Reservada (Aluno)
+        </span>
     </div>
 </section>
 
@@ -42,6 +45,10 @@
                 <div class="numero-box reservada">
                     <span class="numero" id="reservadas-{{ setor.id }}">{{ setor.reservadas_funcionario }}</span>
                     <span class="label">Funcionarios</span>
+                </div>
+                <div class="numero-box reserva-aluno">
+                    <span class="numero" id="reservadas-aluno-{{ setor.id }}">{{ setor.reservadas_aluno }}</span>
+                    <span class="label">Reservadas Aluno</span>
                 </div>
             </div>
             <div class="barra-progresso">

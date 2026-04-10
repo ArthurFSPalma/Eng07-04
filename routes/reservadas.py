@@ -11,7 +11,9 @@ from flask import Blueprint, jsonify, request
 from models.vagas import (
     get_vagas_reservadas,
     get_vaga_by_id,
-    atualizar_status_vaga
+    atualizar_status_vaga,
+    reservar_vaga,
+    desreservar_vaga
 )
 
 reservadas_bp = Blueprint('reservadas', __name__)
@@ -83,3 +85,19 @@ def api_atualizar_status(vaga_id):
         # RF03: Se for vaga reservada, retorna 403 Forbidden
         status_code = 403 if "reservada" in resultado.get("erro", "") else 400
         return jsonify(resultado), status_code
+
+
+@reservadas_bp.route('/api/vagas/<int:vaga_id>/reservar', methods=['POST'])
+def api_reservar_vaga(vaga_id):
+    """Reserva uma vaga de aluno livre."""
+    resultado = reservar_vaga(vaga_id)
+    status_code = 200 if resultado["sucesso"] else 400
+    return jsonify(resultado), status_code
+
+
+@reservadas_bp.route('/api/vagas/<int:vaga_id>/desreservar', methods=['POST'])
+def api_desreservar_vaga(vaga_id):
+    """Remove a reserva de uma vaga de aluno."""
+    resultado = desreservar_vaga(vaga_id)
+    status_code = 200 if resultado["sucesso"] else 400
+    return jsonify(resultado), status_code

@@ -112,6 +112,9 @@ function renderizarMapa(vagas) {
                 // RF03: Vaga reservada - sempre roxa independente do status
                 classeVaga = 'reservada';
                 icone = vaga.status === 'livre' ? '🔓' : '🔒';
+            } else if (vaga.reservado === 1) {
+                classeVaga = 'reserva-aluno';
+                icone = '🟦';
             } else {
                 classeVaga = vaga.status;
                 icone = vaga.status === 'livre' ? '✅' : '🚗';
@@ -122,8 +125,9 @@ function renderizarMapa(vagas) {
                      data-id="${vaga.id}"
                      data-tipo="${vaga.tipo}"
                      data-status="${vaga.status}"
+                     data-reservado="${vaga.reservado}"
                      onclick="abrirModal(${vaga.id})"
-                     title="Vaga ${vaga.numero} - ${vaga.tipo === 'funcionario' ? 'RESERVADA' : vaga.status}">
+                     title="Vaga ${vaga.numero} - ${vaga.tipo === 'funcionario' ? 'RESERVADA FUNCIONARIO' : (vaga.reservado === 1 ? 'RESERVADA ALUNO' : vaga.status)}">
                     <span class="vaga-status-icon">${icone}</span>
                     <span class="vaga-numero">${vaga.numero}</span>
                 </div>
@@ -149,12 +153,14 @@ async function atualizarResumo() {
             dados.setores.forEach(setor => {
                 const livresEl = document.getElementById(`livres-${setor.id}`);
                 const ocupadasEl = document.getElementById(`ocupadas-${setor.id}`);
+                const reservadasAlunoEl = document.getElementById(`reservadas-aluno-${setor.id}`);
 
                 const totalLivres = setor.livres_aluno + setor.livres_func;
                 const totalOcupadas = setor.ocupadas_aluno + setor.ocupadas_func;
 
                 if (livresEl) livresEl.textContent = totalLivres;
                 if (ocupadasEl) ocupadasEl.textContent = totalOcupadas;
+                if (reservadasAlunoEl) reservadasAlunoEl.textContent = setor.reservadas_aluno;
 
                 // Atualiza barra de progresso
                 const card = document.querySelector(`.resumo-card[data-setor-id="${setor.id}"]`);
@@ -195,7 +201,8 @@ async function abrirModal(vagaId) {
 
         const vaga = dados.vaga;
         const isReservada = dados.is_reservada;
-        const classeStatus = isReservada ? 'reservada' : vaga.status;
+        const isReservadaAluno = vaga.tipo === 'aluno' && vaga.reservado === 1;
+        const classeStatus = isReservada ? 'reservada' : (isReservadaAluno ? 'reserva-aluno' : vaga.status);
 
         let html = '';
 
@@ -211,7 +218,10 @@ async function abrirModal(vagaId) {
 
         // Informacoes
         html += '<div class="modal-info">';
-        html += `<p><strong>Status:</strong> ${vaga.status === 'livre' ? '🟢 Livre' : '🔴 Ocupada'}</p>`;
+        const statusTexto = isReservadaAluno
+            ? '🔵 Reservada (Aluno)'
+            : (vaga.status === 'livre' ? '🟢 Livre' : '🔴 Ocupada');
+        html += `<p><strong>Status:</strong> ${statusTexto}</p>`;
         html += `<p><strong>Tipo:</strong> ${vaga.tipo === 'funcionario' ? '🔒 Funcionario' : '🎓 Aluno'}</p>`;
         html += `<p><strong>Ultima atualizacao:</strong> ${vaga.atualizado_em}</p>`;
         html += '</div>';
@@ -235,8 +245,14 @@ async function abrirModal(vagaId) {
             html += '<button class="btn btn-ocupada" disabled title="Vagas reservadas nao podem ser alteradas">🔒 Marcar Ocupada</button>';
         } else {
             // Vagas de alunos podem ser alteradas
-            html += `<button class="btn btn-livre" onclick="alterarStatus(${vaga.id}, 'livre')" ${vaga.status === 'livre' ? 'disabled' : ''}>✅ Marcar Livre</button>`;
-            html += `<button class="btn btn-ocupada" onclick="alterarStatus(${vaga.id}, 'ocupada')" ${vaga.status === 'ocupada' ? 'disabled' : ''}>🚗 Marcar Ocupada</button>`;
+            html += `<button class="btn btn-livre" onclick="alterarStatus(${vaga.id}, 'livre')" ${(vaga.status === 'livre' || isReservadaAluno) ? 'disabled' : ''}>✅ Marcar Livre</button>`;
+            html += `<button class="btn btn-ocupada" onclick="alterarStatus(${vaga.id}, 'ocupada')" ${(vaga.status === 'ocupada' || isReservadaAluno) ? 'disabled' : ''}>🚗 Marcar Ocupada</button>`;
+
+            if (isReservadaAluno) {
+                html += `<button class="btn btn-desreservar" onclick="desreservarVaga(${vaga.id})">❌ Desreservar</button>`;
+            } else {
+                html += `<button class="btn btn-reservar" onclick="reservarVaga(${vaga.id})" ${vaga.status !== 'livre' ? 'disabled' : ''}>🟦 Reservar</button>`;
+            }
         }
 
         html += '<button class="btn btn-fechar" onclick="fecharModal()">Fechar</button>';
@@ -285,6 +301,38 @@ async function alterarStatus(vagaId, novoStatus) {
             alert(dados.erro || 'Erro ao atualizar vaga.');
         }
 
+    } catch (erro) {
+        alert('Erro de conexao. Tente novamente.');
+    }
+}
+
+async function reservarVaga(vagaId) {
+    try {
+        const response = await fetch(`/api/vagas/${vagaId}/reservar`, { method: 'POST' });
+        const dados = await response.json();
+
+        if (dados.sucesso) {
+            fecharModal();
+            atualizarMapa();
+        } else {
+            alert(dados.erro || 'Erro ao reservar vaga.');
+        }
+    } catch (erro) {
+        alert('Erro de conexao. Tente novamente.');
+    }
+}
+
+async function desreservarVaga(vagaId) {
+    try {
+        const response = await fetch(`/api/vagas/${vagaId}/desreservar`, { method: 'POST' });
+        const dados = await response.json();
+
+        if (dados.sucesso) {
+            fecharModal();
+            atualizarMapa();
+        } else {
+            alert(dados.erro || 'Erro ao desreservar vaga.');
+        }
     } catch (erro) {
         alert('Erro de conexao. Tente novamente.');
     }

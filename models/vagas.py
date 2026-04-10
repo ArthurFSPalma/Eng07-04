@@ -24,7 +24,8 @@ def get_all_setores():
             s.total_vagas,
             COALESCE(SUM(CASE WHEN v.status = 'livre' THEN 1 ELSE 0 END), 0) AS livres,
             COALESCE(SUM(CASE WHEN v.status = 'ocupada' THEN 1 ELSE 0 END), 0) AS ocupadas,
-            COALESCE(SUM(CASE WHEN v.tipo = 'funcionario' THEN 1 ELSE 0 END), 0) AS reservadas_funcionario
+            COALESCE(SUM(CASE WHEN v.tipo = 'funcionario' THEN 1 ELSE 0 END), 0) AS reservadas_funcionario,
+            COALESCE(SUM(CASE WHEN v.tipo = 'aluno' AND v.reservado = 1 THEN 1 ELSE 0 END), 0) AS reservadas_aluno
         FROM setores s
         LEFT JOIN vagas v ON v.setor_id = s.id
         GROUP BY s.id
@@ -58,6 +59,7 @@ def get_all_vagas():
             v.numero,
             v.tipo,
             v.status,
+            v.reservado,
             v.atualizado_em,
             s.nome AS setor_nome
         FROM vagas v
@@ -78,6 +80,7 @@ def get_vagas_por_setor(setor_id):
             v.numero,
             v.tipo,
             v.status,
+            v.reservado,
             v.atualizado_em
         FROM vagas v
         WHERE v.setor_id = ?
@@ -97,6 +100,7 @@ def get_vaga_by_id(vaga_id):
             v.numero,
             v.tipo,
             v.status,
+            v.reservado,
             v.atualizado_em,
             s.nome AS setor_nome,
             s.descricao AS setor_descricao
@@ -121,6 +125,7 @@ def get_vagas_reservadas():
             v.numero,
             v.tipo,
             v.status,
+            v.reservado,
             v.atualizado_em,
             s.nome AS setor_nome
         FROM vagas v
@@ -156,6 +161,14 @@ def atualizar_status_vaga(vaga_id, novo_status):
             "erro": "Vaga reservada para funcionarios. Alunos nao podem alterar o status desta vaga."
         }
 
+    # Reserva de aluno deve ser removida antes de trocar status manualmente.
+    if vaga["reservado"] == 1:
+        conn.close()
+        return {
+            "sucesso": False,
+            "erro": "Vaga reservada por aluno. Desreserve a vaga antes de alterar o status."
+        }
+
     # Valida o status
     if novo_status not in ("livre", "ocupada"):
         conn.close()
@@ -189,6 +202,7 @@ def get_resumo_setores():
             s.total_vagas,
             COALESCE(SUM(CASE WHEN v.status = 'livre' AND v.tipo = 'aluno' THEN 1 ELSE 0 END), 0) AS livres_aluno,
             COALESCE(SUM(CASE WHEN v.status = 'ocupada' AND v.tipo = 'aluno' THEN 1 ELSE 0 END), 0) AS ocupadas_aluno,
+            COALESCE(SUM(CASE WHEN v.tipo = 'aluno' AND v.reservado = 1 THEN 1 ELSE 0 END), 0) AS reservadas_aluno,
             COALESCE(SUM(CASE WHEN v.tipo = 'funcionario' AND v.status = 'livre' THEN 1 ELSE 0 END), 0) AS livres_func,
             COALESCE(SUM(CASE WHEN v.tipo = 'funcionario' AND v.status = 'ocupada' THEN 1 ELSE 0 END), 0) AS ocupadas_func
         FROM setores s
@@ -198,3 +212,63 @@ def get_resumo_setores():
     ''').fetchall()
     conn.close()
     return [dict(r) for r in resumo]
+
+
+def reservar_vaga(vaga_id):
+    """Reserva uma vaga de aluno que esteja livre."""
+    conn = get_db()
+    vaga = conn.execute("SELECT * FROM vagas WHERE id = ?", (vaga_id,)).fetchone()
+
+    if not vaga:
+        conn.close()
+        return {"sucesso": False, "erro": "Vaga nao encontrada."}
+
+    if vaga["tipo"] == "funcionario":
+        conn.close()
+        return {"sucesso": False, "erro": "Vagas de funcionarios nao podem ser reservadas por alunos."}
+
+    if vaga["reservado"] == 1:
+        conn.close()
+        return {"sucesso": False, "erro": "Vaga ja esta reservada."}
+
+    if vaga["status"] != "livre":
+        conn.close()
+        return {"sucesso": False, "erro": "Apenas vagas livres podem ser reservadas."}
+
+    agora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    conn.execute(
+        "UPDATE vagas SET reservado = 1, atualizado_em = ? WHERE id = ?",
+        (agora, vaga_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return {"sucesso": True, "mensagem": f"Vaga {vaga['numero']} reservada com sucesso."}
+
+
+def desreservar_vaga(vaga_id):
+    """Remove a reserva de uma vaga de aluno."""
+    conn = get_db()
+    vaga = conn.execute("SELECT * FROM vagas WHERE id = ?", (vaga_id,)).fetchone()
+
+    if not vaga:
+        conn.close()
+        return {"sucesso": False, "erro": "Vaga nao encontrada."}
+
+    if vaga["tipo"] == "funcionario":
+        conn.close()
+        return {"sucesso": False, "erro": "Vagas de funcionarios nao usam reserva de aluno."}
+
+    if vaga["reservado"] == 0:
+        conn.close()
+        return {"sucesso": False, "erro": "Vaga nao esta reservada."}
+
+    agora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    conn.execute(
+        "UPDATE vagas SET reservado = 0, atualizado_em = ? WHERE id = ?",
+        (agora, vaga_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return {"sucesso": True, "mensagem": f"Reserva da vaga {vaga['numero']} removida."}

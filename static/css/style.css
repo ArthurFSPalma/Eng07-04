@@ -109,6 +109,7 @@ body {
 .legenda-cor.livre { background-color: #4caf50; }
 .legenda-cor.ocupada { background-color: #f44336; }
 .legenda-cor.reservada { background-color: #7b1fa2; }
+.legenda-cor.reserva-aluno { background-color: #1976d2; }
 
 /* === RESUMO DOS SETORES (RF01) === */
 .resumo-section {
@@ -167,6 +168,7 @@ body {
 .numero-box.livre { background: #e8f5e9; }
 .numero-box.ocupada { background: #ffebee; }
 .numero-box.reservada { background: #f3e5f5; }
+.numero-box.reserva-aluno { background: #e3f2fd; }
 
 .numero-box .numero {
     display: block;
@@ -177,6 +179,7 @@ body {
 .numero-box.livre .numero { color: #2e7d32; }
 .numero-box.ocupada .numero { color: #c62828; }
 .numero-box.reservada .numero { color: #7b1fa2; }
+.numero-box.reserva-aluno .numero { color: #1565c0; }
 
 .numero-box .label {
     font-size: 0.7rem;
@@ -304,6 +307,20 @@ body {
     font-size: 0.6rem;
 }
 
+.vaga.reserva-aluno {
+    background-color: #1976d2;
+    color: white;
+    border: 2px dashed #90caf9;
+}
+
+.vaga.reserva-aluno::after {
+    content: "🟦";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.55rem;
+}
+
 .vaga .vaga-numero {
     font-size: 0.75rem;
 }
@@ -378,6 +395,7 @@ body {
 .modal-vaga-badge.livre { background: #4caf50; }
 .modal-vaga-badge.ocupada { background: #f44336; }
 .modal-vaga-badge.reservada { background: #7b1fa2; }
+.modal-vaga-badge.reserva-aluno { background: #1976d2; }
 
 .modal-info {
     margin-bottom: 15px;
@@ -440,6 +458,16 @@ body {
 
 .btn-ocupada {
     background: #f44336;
+    color: white;
+}
+
+.btn-reservar {
+    background: #1976d2;
+    color: white;
+}
+
+.btn-desreservar {
+    background: #ff9800;
     color: white;
 }
 
