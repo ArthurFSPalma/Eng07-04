@@ -10,7 +10,7 @@ Sistema para visualizacao de vagas de estacionamento no campus universitario em 
 |---|---|---|
 | **Ruan Trizotti** | RF01 (Mapa de Vagas em Tempo Real) + RF03 (Vagas Reservadas) | `routes/mapa.py`, `routes/reservadas.py`, `models/vagas.py`, `templates/mapa.html`, `static/js/mapa.js` |
 | **Adolfo Mendonca** | RF02 (Reporte Manual de Vagas) | `routes/reservadas.py`, `models/vagas.py`, `static/js/mapa.js`, `templates/mapa.html`, `static/css/style.css`, `database.py` |
-| Aluno 3 | RF04 (Acesso Rapido) + RF05 (Multiplataforma) | *(a definir)* |
+| **Arthur Palam**  | RF04 (Acesso Rapido) + RF05 (Multiplataforma) | routes/auth.py, models/usuarios.py, templates/login.html, database.py, app.py |
 
 ## Requisitos Implementados
 
