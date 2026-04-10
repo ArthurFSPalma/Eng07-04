@@ -8,7 +8,7 @@ Sistema para visualizacao de vagas de estacionamento no campus universitario em 
 
 | Aluno | Requisitos | Arquivos Principais |
 |---|---|---|
-| **Arthur Palma** | RF01 (Mapa de Vagas em Tempo Real) + RF03 (Vagas Reservadas) | `routes/mapa.py`, `routes/reservadas.py`, `models/vagas.py`, `templates/mapa.html`, `static/js/mapa.js` |
+| **Ruan M** | RF01 (Mapa de Vagas em Tempo Real) + RF03 (Vagas Reservadas) | `routes/mapa.py`, `routes/reservadas.py`, `models/vagas.py`, `templates/mapa.html`, `static/js/mapa.js` |
 | Aluno 2 | RF02 (Reporte Manual de Vagas) | *(a definir)* |
 | Aluno 3 | RF04 (Acesso Rapido) + RF05 (Multiplataforma) | *(a definir)* |
 
