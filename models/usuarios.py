@@ -19,6 +19,8 @@ def _hash_senha(senha: str) -> str:
 
 
 def criar_usuario(nome: str, email: str, senha: str, tipo: str = "aluno") -> Optional[dict]:
+    if tipo not in ("aluno", "funcionario", "admin"):
+        tipo = "aluno"
     """
     Cria um novo usuario no banco.
     Retorna o usuario criado ou None se o email ja existir.

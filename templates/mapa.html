@@ -2,10 +2,7 @@
 
 {% block content %}
 
-<!-- =============================== -->
-<!-- RF01: LEGENDA DO MAPA           -->
-<!-- RF03: Inclui tipo reservada     -->
-<!-- =============================== -->
+<!-- LEGENDA -->
 <section class="legenda-section">
     <h3>Legenda</h3>
     <div class="legenda">
@@ -16,17 +13,15 @@
             <span class="legenda-cor ocupada"></span> Ocupada (Aluno)
         </span>
         <span class="legenda-item">
-            <span class="legenda-cor reservada"></span> 🔒 Reservada (Funcionario)
+            <span class="legenda-cor reservada"></span> Reservada (Funcionario)
         </span>
         <span class="legenda-item">
-            <span class="legenda-cor reserva-aluno"></span> 🟦 Reservada (Aluno)
+            <span class="legenda-cor reserva-aluno"></span> Reservada (Aluno)
         </span>
     </div>
 </section>
 
-<!-- =============================== -->
-<!-- RF01: RESUMO DOS SETORES        -->
-<!-- =============================== -->
+<!-- RESUMO DOS SETORES -->
 <section class="resumo-section">
     <h2>Resumo por Setor</h2>
     <div class="resumo-grid" id="resumo-setores">
@@ -48,7 +43,7 @@
                 </div>
                 <div class="numero-box reserva-aluno">
                     <span class="numero" id="reservadas-aluno-{{ setor.id }}">{{ setor.reservadas_aluno }}</span>
-                    <span class="label">Reservadas Aluno</span>
+                    <span class="label">Reserv. Aluno</span>
                 </div>
             </div>
             <div class="barra-progresso">
@@ -61,38 +56,32 @@
     </div>
 </section>
 
-<!-- =============================== -->
-<!-- RF01: MAPA DE VAGAS POR SETOR   -->
-<!-- RF03: Vagas reservadas em roxo   -->
-<!-- =============================== -->
+<!-- MAPA DE VAGAS -->
 <section class="mapa-section">
     <h2>Mapa de Vagas</h2>
-    <p class="mapa-instrucao">Clique em uma vaga para ver detalhes. Vagas de alunos podem ter o status atualizado.</p>
-
+    <p class="mapa-instrucao">Clique em uma vaga para ver detalhes ou alterar o status.</p>
     <div id="mapa-vagas">
-        <!-- Preenchido via JavaScript (polling AJAX) -->
         <div class="loading">Carregando mapa de vagas...</div>
     </div>
 </section>
 
-<!-- =============================== -->
-<!-- RF03: MODAL DE DETALHES DA VAGA -->
-<!-- =============================== -->
+<!-- MODAL -->
 <div id="modal-vaga" class="modal" style="display:none;">
     <div class="modal-content">
-        <span class="modal-close" onclick="fecharModal()">&times;</span>
-        <div id="modal-body">
-            <!-- Preenchido via JavaScript -->
-        </div>
+        <button class="modal-close" onclick="fecharModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div id="modal-body"></div>
     </div>
 </div>
 
-<!-- =============================== -->
-<!-- RF01: TIMER DE ATUALIZACAO      -->
-<!-- =============================== -->
+<!-- BARRA DE ATUALIZACAO -->
 <div class="auto-refresh-bar">
     <span>Proxima atualizacao em: <strong id="countdown">60</strong>s</span>
-    <button onclick="atualizarMapa()" class="btn-atualizar">🔄 Atualizar Agora</button>
+    <button onclick="atualizarMapa()" class="btn-atualizar">
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Atualizar
+    </button>
 </div>
 
 {% endblock %}

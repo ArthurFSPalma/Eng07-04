@@ -49,7 +49,7 @@ def init_db():
             email       TEXT    NOT NULL UNIQUE,
             senha_hash  TEXT    NOT NULL,
             tipo        TEXT    NOT NULL DEFAULT 'aluno'
-                                CHECK(tipo IN ('aluno', 'funcionario')),
+                                CHECK(tipo IN ('aluno', 'funcionario', 'admin')),
             criado_em   DATETIME DEFAULT CURRENT_TIMESTAMP
         );
     ''')
@@ -167,6 +167,7 @@ def seed_db():
     usuarios_seed = [
         ("Aluno Teste",       "aluno@campus.edu",       _hash("123456"), "aluno"),
         ("Prof. Funcionario", "funcionario@campus.edu",  _hash("123456"), "funcionario"),
+        ("Administrador",     "admin@campus.edu",        _hash("admin123"), "admin"),
     ]
 
     cursor.executemany(

@@ -1,7 +1,7 @@
 /* ========================================
-   ESTACIONAMENTO DO CAMPUS - Estilos
-   RF01: Mapa de Vagas em Tempo Real
-   RF03: Identificacao de Vagas Reservadas
+   ESTACIONAMENTO DO CAMPUS
+   Paleta: Branco + Rosa Pastel
+   Icones: SVG inline (sem emojis)
    ======================================== */
 
 /* === RESET E BASE === */
@@ -12,21 +12,34 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #fdf2f8;
+    color: #374151;
     line-height: 1.6;
+}
+
+/* === ICONES === */
+.icon-sm {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.icon-md {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 /* === HEADER === */
 .header {
-    background: linear-gradient(135deg, #1a237e, #283593);
-    color: white;
-    padding: 15px 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    background: #fff;
+    border-bottom: 1px solid #fce7f3;
+    padding: 12px 20px;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 1px 8px rgba(190, 24, 93, 0.06);
 }
 
 .header-content {
@@ -39,29 +52,117 @@ body {
     gap: 10px;
 }
 
-.header h1 {
-    font-size: 1.4rem;
-}
-
-.header-status {
+.header-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+}
+
+.header-icon {
+    width: 32px;
+    height: 32px;
+    color: #be185d;
+}
+
+.header h1 {
+    font-size: 1.2rem;
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
 .status-badge {
-    padding: 4px 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
 }
 
-.status-badge.online { background: rgba(76, 175, 80, 0.2); }
-.status-badge.offline { background: rgba(244, 67, 54, 0.2); }
+.status-badge.online {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.status-badge.offline {
+    background: #fef2f2;
+    color: #dc2626;
+}
 
 .timestamp {
-    font-size: 0.8rem;
-    opacity: 0.8;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* === USER INFO NO HEADER === */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 14px;
+    border-left: 1px solid #fce7f3;
+}
+
+.user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #fce7f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #be185d;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.user-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.user-role {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.role-aluno { background: #ede9fe; color: #7c3aed; }
+.role-func { background: #fef3c7; color: #d97706; }
+.role-admin { background: #fce7f3; color: #be185d; }
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    color: #9ca3af;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-logout:hover {
+    background: #fef2f2;
+    color: #ef4444;
 }
 
 /* === CONTAINER === */
@@ -71,19 +172,21 @@ body {
     padding: 20px;
 }
 
-/* === LEGENDA (RF01 + RF03) === */
+/* === LEGENDA === */
 .legenda-section {
-    background: white;
-    border-radius: 10px;
-    padding: 15px 20px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 20px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    border: 1px solid #fce7f3;
 }
 
 .legenda-section h3 {
-    font-size: 0.9rem;
-    color: #666;
+    font-size: 0.8rem;
+    color: #9ca3af;
     margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .legenda {
@@ -96,100 +199,103 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    color: #6b7280;
 }
 
 .legenda-cor {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
     display: inline-block;
 }
 
-.legenda-cor.livre { background-color: #4caf50; }
-.legenda-cor.ocupada { background-color: #f44336; }
-.legenda-cor.reservada { background-color: #7b1fa2; }
-.legenda-cor.reserva-aluno { background-color: #1976d2; }
+.legenda-cor.livre { background-color: #86efac; }
+.legenda-cor.ocupada { background-color: #fca5a5; }
+.legenda-cor.reservada { background-color: #d8b4fe; }
+.legenda-cor.reserva-aluno { background-color: #93c5fd; }
 
-/* === RESUMO DOS SETORES (RF01) === */
+/* === RESUMO DOS SETORES === */
 .resumo-section {
     margin-bottom: 25px;
 }
 
 .resumo-section h2 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    color: #1a237e;
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+    color: #be185d;
+    font-weight: 700;
 }
 
 .resumo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
 }
 
 .resumo-card {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    transition: transform 0.2s;
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid #fce7f3;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .resumo-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    box-shadow: 0 6px 16px rgba(190, 24, 93, 0.08);
 }
 
-/* RF03: Destaque do setor da Biblioteca */
 .resumo-card[data-setor-id="1"] {
-    border-left: 4px solid #7b1fa2;
+    border-left: 4px solid #c084fc;
 }
 
 .resumo-card h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin-bottom: 12px;
-    color: #333;
+    color: #374151;
+    font-weight: 600;
 }
 
 .resumo-numeros {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 10px;
 }
 
 .numero-box {
     flex: 1;
     text-align: center;
-    padding: 8px;
+    padding: 8px 4px;
     border-radius: 8px;
 }
 
-.numero-box.livre { background: #e8f5e9; }
-.numero-box.ocupada { background: #ffebee; }
-.numero-box.reservada { background: #f3e5f5; }
-.numero-box.reserva-aluno { background: #e3f2fd; }
+.numero-box.livre { background: #f0fdf4; }
+.numero-box.ocupada { background: #fef2f2; }
+.numero-box.reservada { background: #faf5ff; }
+.numero-box.reserva-aluno { background: #eff6ff; }
 
 .numero-box .numero {
     display: block;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
 }
 
-.numero-box.livre .numero { color: #2e7d32; }
-.numero-box.ocupada .numero { color: #c62828; }
-.numero-box.reservada .numero { color: #7b1fa2; }
-.numero-box.reserva-aluno .numero { color: #1565c0; }
+.numero-box.livre .numero { color: #16a34a; }
+.numero-box.ocupada .numero { color: #dc2626; }
+.numero-box.reservada .numero { color: #9333ea; }
+.numero-box.reserva-aluno .numero { color: #2563eb; }
 
 .numero-box .label {
-    font-size: 0.7rem;
-    color: #666;
+    font-size: 0.65rem;
+    color: #9ca3af;
     text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
 .barra-progresso {
-    height: 6px;
-    background: #e0e0e0;
+    height: 5px;
+    background: #f3f4f6;
     border-radius: 3px;
     overflow: hidden;
     margin-bottom: 4px;
@@ -197,69 +303,76 @@ body {
 
 .barra-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4caf50, #66bb6a);
+    background: linear-gradient(90deg, #86efac, #4ade80);
     border-radius: 3px;
     transition: width 0.5s ease;
 }
 
-/* === MAPA DE VAGAS (RF01 + RF03) === */
+.resumo-card small {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* === MAPA DE VAGAS === */
 .mapa-section {
     margin-bottom: 25px;
 }
 
 .mapa-section h2 {
-    font-size: 1.2rem;
-    margin-bottom: 5px;
-    color: #1a237e;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    color: #be185d;
+    font-weight: 700;
 }
 
 .mapa-instrucao {
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 15px;
+    font-size: 0.82rem;
+    color: #9ca3af;
+    margin-bottom: 14px;
 }
 
 .setor-bloco {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+    border: 1px solid #fce7f3;
 }
 
-/* RF03: Borda especial para setor da Biblioteca */
 .setor-bloco.biblioteca {
-    border: 2px solid #7b1fa2;
+    border: 2px solid #c084fc;
     position: relative;
 }
 
 .setor-bloco.biblioteca::before {
-    content: "🔒 Area com vagas de funcionarios";
+    content: "Vagas de funcionarios";
     position: absolute;
-    top: -12px;
-    left: 15px;
-    background: #7b1fa2;
+    top: -11px;
+    left: 14px;
+    background: #c084fc;
     color: white;
     padding: 2px 12px;
-    border-radius: 10px;
-    font-size: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.7rem;
     font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
 .setor-bloco h3 {
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-bottom: 12px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
 }
 
 .vagas-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+    gap: 7px;
 }
 
-/* Cada vaga individual */
+/* === VAGA INDIVIDUAL === */
 .vaga {
     aspect-ratio: 1;
     border-radius: 8px;
@@ -268,259 +381,255 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 600;
-    transition: all 0.2s;
+    transition: all 0.15s;
     position: relative;
     border: 2px solid transparent;
 }
 
 .vaga:hover {
-    transform: scale(1.1);
+    transform: scale(1.12);
     z-index: 5;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
 }
 
-/* RF01: Cores por status */
 .vaga.livre {
-    background-color: #4caf50;
-    color: white;
+    background-color: #86efac;
+    color: #166534;
 }
 
 .vaga.ocupada {
-    background-color: #f44336;
-    color: white;
+    background-color: #fca5a5;
+    color: #991b1b;
 }
 
-/* RF03: Cor distinta para vagas reservadas */
 .vaga.reservada {
-    background-color: #7b1fa2;
-    color: white;
-    border: 2px dashed #e1bee7;
+    background-color: #d8b4fe;
+    color: #581c87;
+    border: 2px dashed #c084fc;
 }
 
-.vaga.reservada::after {
-    content: "🔒";
+.vaga.reservada .vaga-icon-lock {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    font-size: 0.6rem;
+    top: 3px;
+    right: 3px;
+    width: 10px;
+    height: 10px;
+    color: #7c3aed;
 }
 
 .vaga.reserva-aluno {
-    background-color: #1976d2;
-    color: white;
-    border: 2px dashed #90caf9;
-}
-
-.vaga.reserva-aluno::after {
-    content: "🟦";
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    font-size: 0.55rem;
+    background-color: #93c5fd;
+    color: #1e3a5f;
+    border: 2px dashed #60a5fa;
 }
 
 .vaga .vaga-numero {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
 }
 
 .vaga .vaga-status-icon {
-    font-size: 1rem;
-    margin-bottom: 2px;
+    width: 16px;
+    height: 16px;
+    margin-bottom: 1px;
 }
 
-/* === MODAL (RF03) === */
+/* === MODAL === */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.35);
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(2px);
 }
 
 .modal-content {
-    background: white;
-    border-radius: 12px;
-    padding: 30px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
     max-width: 420px;
     width: 90%;
     position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    animation: modalIn 0.3s ease;
+    box-shadow: 0 12px 40px rgba(190, 24, 93, 0.12);
+    animation: modalIn 0.25s ease;
 }
 
 @keyframes modalIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from { transform: scale(0.92) translateY(10px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 .modal-close {
     position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.5rem;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
     cursor: pointer;
-    color: #999;
-    transition: color 0.2s;
+    color: #9ca3af;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
 }
 
 .modal-close:hover {
-    color: #333;
+    background: #f3f4f6;
+    color: #374151;
 }
 
 .modal-vaga-header {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
 }
 
 .modal-vaga-badge {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
     color: white;
 }
 
-.modal-vaga-badge.livre { background: #4caf50; }
-.modal-vaga-badge.ocupada { background: #f44336; }
-.modal-vaga-badge.reservada { background: #7b1fa2; }
-.modal-vaga-badge.reserva-aluno { background: #1976d2; }
+.modal-vaga-badge svg {
+    width: 22px;
+    height: 22px;
+}
+
+.modal-vaga-badge.livre { background: #4ade80; }
+.modal-vaga-badge.ocupada { background: #f87171; }
+.modal-vaga-badge.reservada { background: #a855f7; }
+.modal-vaga-badge.reserva-aluno { background: #60a5fa; }
 
 .modal-info {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 .modal-info p {
-    margin-bottom: 6px;
-    font-size: 0.9rem;
+    margin-bottom: 5px;
+    font-size: 0.88rem;
+    color: #6b7280;
 }
 
 .modal-info strong {
-    color: #333;
+    color: #374151;
 }
 
-/* RF03: Alerta de vaga reservada */
+/* Alerta de vaga reservada */
 .alerta-reservada {
-    background: #fce4ec;
-    border: 1px solid #ef9a9a;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 15px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
 }
 
 .alerta-reservada .alerta-titulo {
-    color: #c62828;
+    color: #dc2626;
     font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .alerta-reservada .alerta-texto {
-    color: #b71c1c;
-    font-size: 0.85rem;
+    color: #b91c1c;
+    font-size: 0.82rem;
 }
 
 .modal-actions {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 9px 16px;
     border: none;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.15s;
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 0;
 }
 
-.btn:hover { transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
+.btn:hover { opacity: 0.85; }
+.btn:active { transform: scale(0.97); }
 
-.btn-livre {
-    background: #4caf50;
-    color: white;
-}
-
-.btn-ocupada {
-    background: #f44336;
-    color: white;
-}
-
-.btn-reservar {
-    background: #1976d2;
-    color: white;
-}
-
-.btn-desreservar {
-    background: #ff9800;
-    color: white;
-}
-
-.btn-fechar {
-    background: #e0e0e0;
-    color: #333;
-}
+.btn-livre { background: #4ade80; color: #166534; }
+.btn-ocupada { background: #f87171; color: #fff; }
+.btn-reservar { background: #60a5fa; color: #fff; }
+.btn-desreservar { background: #fb923c; color: #fff; }
+.btn-fechar { background: #f3f4f6; color: #6b7280; }
 
 .btn:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
     transform: none;
 }
 
-/* === AUTO-REFRESH BAR (RF01) === */
+/* === AUTO-REFRESH BAR === */
 .auto-refresh-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: white;
-    border-top: 1px solid #e0e0e0;
+    background: #fff;
+    border-top: 1px solid #fce7f3;
     padding: 10px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
-    font-size: 0.85rem;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+    gap: 14px;
+    font-size: 0.82rem;
+    color: #6b7280;
+    box-shadow: 0 -2px 10px rgba(190, 24, 93, 0.04);
     z-index: 50;
 }
 
 .btn-atualizar {
-    background: #1a237e;
+    background: linear-gradient(135deg, #ec4899, #be185d);
     color: white;
     border: none;
-    padding: 6px 16px;
+    padding: 6px 14px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.btn-atualizar:hover {
-    background: #283593;
-}
+.btn-atualizar:hover { opacity: 0.85; }
 
 /* === LOADING === */
 .loading {
     text-align: center;
     padding: 40px;
-    color: #999;
-    font-size: 1rem;
+    color: #d1d5db;
+    font-size: 0.95rem;
 }
 
 /* === FOOTER === */
@@ -528,28 +637,36 @@ body {
     text-align: center;
     padding: 20px;
     margin-bottom: 50px;
-    color: #999;
-    font-size: 0.8rem;
+    color: #d1d5db;
+    font-size: 0.78rem;
 }
 
 /* === RESPONSIVO === */
 @media (max-width: 768px) {
-    .header h1 { font-size: 1.1rem; }
-    .resumo-grid { grid-template-columns: 1fr; }
-    .vagas-grid { grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); }
-    .vaga { font-size: 0.6rem; }
+    .header h1 { font-size: 1rem; }
+    .header-right { gap: 8px; }
+    .user-details { display: none; }
+    .resumo-grid { grid-template-columns: 1fr 1fr; }
+    .vagas-grid { grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); }
+    .resumo-numeros { flex-wrap: wrap; }
+    .numero-box { min-width: 45%; }
 }
 
-/* === MODO OFFLINE (RF01) === */
+@media (max-width: 480px) {
+    .resumo-grid { grid-template-columns: 1fr; }
+    .legenda { flex-direction: column; gap: 6px; }
+}
+
+/* === MODO OFFLINE === */
 .offline-banner {
-    background: #fff3e0;
-    border: 1px solid #ffb74d;
-    border-radius: 8px;
-    padding: 12px 20px;
-    margin-bottom: 15px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-bottom: 14px;
     text-align: center;
-    font-size: 0.85rem;
-    color: #e65100;
+    font-size: 0.82rem;
+    color: #d97706;
     display: none;
 }
 

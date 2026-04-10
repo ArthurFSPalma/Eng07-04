@@ -9,7 +9,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 30%, #fbcfe8 70%, #f9a8d4 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -19,54 +19,43 @@
 
         .card {
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 16px rgba(0,0,0,.10);
-            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(190, 24, 93, 0.08), 0 1px 4px rgba(0,0,0,0.04);
+            padding: 2.5rem 2rem;
             width: 100%;
             max-width: 400px;
         }
 
         .logo {
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
-        .logo span { font-size: 2.5rem; }
-        .logo h1 { font-size: 1.2rem; color: #1a1a2e; margin-top: .4rem; }
-        .logo p  { font-size: .85rem; color: #666; margin-top: .2rem; }
-
-        /* Aviso de login opcional (RF04) */
-        .aviso-opcional {
-            background: #e8f4fd;
-            border-left: 4px solid #3498db;
-            border-radius: 6px;
-            padding: .75rem 1rem;
-            margin-bottom: 1.5rem;
-            font-size: .85rem;
-            color: #2980b9;
+        .logo svg {
+            width: 48px;
+            height: 48px;
+            color: #be185d;
         }
-        .aviso-opcional a {
-            color: #1a6fa5;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .aviso-opcional a:hover { text-decoration: underline; }
+        .logo h1 { font-size: 1.3rem; color: #1a1a2e; margin-top: .5rem; }
+        .logo p  { font-size: .85rem; color: #9ca3af; margin-top: .25rem; }
 
         .erro {
-            background: #fdecea;
-            border-left: 4px solid #e74c3c;
-            border-radius: 6px;
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            border-radius: 8px;
             padding: .75rem 1rem;
             margin-bottom: 1rem;
             font-size: .85rem;
-            color: #c0392b;
+            color: #dc2626;
         }
 
         label {
             display: block;
-            font-size: .85rem;
+            font-size: .82rem;
             font-weight: 600;
-            color: #444;
+            color: #6b7280;
             margin-bottom: .3rem;
+            text-transform: uppercase;
+            letter-spacing: .3px;
         }
 
         input[type="text"],
@@ -74,37 +63,43 @@
         input[type="password"],
         select {
             width: 100%;
-            padding: .65rem .9rem;
-            border: 1.5px solid #ddd;
-            border-radius: 8px;
+            padding: .7rem 1rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
             font-size: .95rem;
             margin-bottom: 1rem;
-            transition: border-color .2s;
+            transition: border-color .2s, box-shadow .2s;
             outline: none;
+            background: #fafafa;
         }
-        input:focus, select:focus { border-color: #3498db; }
+        input:focus, select:focus {
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+            background: #fff;
+        }
 
         .btn-primary {
             width: 100%;
-            padding: .75rem;
-            background: #2c3e50;
+            padding: .8rem;
+            background: linear-gradient(135deg, #ec4899, #be185d);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background .2s;
+            transition: opacity .2s, transform .1s;
         }
-        .btn-primary:hover { background: #1a252f; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-primary:active { transform: scale(0.98); }
 
         .btn-secundario {
             width: 100%;
-            padding: .65rem;
+            padding: .7rem;
             background: transparent;
-            color: #555;
-            border: 1.5px solid #ddd;
-            border-radius: 8px;
+            color: #6b7280;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
             font-size: .9rem;
             cursor: pointer;
             margin-top: .75rem;
@@ -113,58 +108,49 @@
             display: block;
             text-align: center;
         }
-        .btn-secundario:hover { border-color: #999; color: #222; }
+        .btn-secundario:hover { border-color: #ec4899; color: #be185d; }
 
         .divisor {
             display: flex;
             align-items: center;
             gap: .75rem;
             margin: 1.25rem 0;
-            color: #aaa;
+            color: #d1d5db;
             font-size: .8rem;
         }
         .divisor::before, .divisor::after {
             content: '';
             flex: 1;
             height: 1px;
-            background: #e0e0e0;
+            background: #e5e7eb;
         }
 
         .link-alterar {
             text-align: center;
-            margin-top: 1rem;
+            margin-top: 1.2rem;
             font-size: .85rem;
-            color: #666;
+            color: #9ca3af;
         }
-        .link-alterar a { color: #2980b9; text-decoration: none; font-weight: 600; }
+        .link-alterar a { color: #ec4899; text-decoration: none; font-weight: 600; }
         .link-alterar a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 <div class="card">
     <div class="logo">
-        <span>🅿️</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><text x="12" y="16" text-anchor="middle" font-size="12" fill="currentColor" stroke="none" font-weight="700">P</text></svg>
         <h1>Estacionamento Campus</h1>
-        <p>{% if modo == 'registro' %}Crie sua conta{% else %}Acesso opcional{% endif %}</p>
+        <p>{% if modo == 'registro' %}Crie sua conta para acessar{% else %}Entre para continuar{% endif %}</p>
     </div>
-
-    <!-- RF04: Login e OPCIONAL — usuario pode voltar ao mapa sem logar -->
-    {% if modo != 'registro' %}
-    <div class="aviso-opcional">
-        O mapa de vagas funciona <strong>sem login</strong>.
-        <a href="/">← Voltar ao mapa</a>
-    </div>
-    {% endif %}
 
     {% if erro %}
     <div class="erro">{{ erro }}</div>
     {% endif %}
 
     {% if modo == 'registro' %}
-    <!-- FORMULARIO DE REGISTRO -->
     <form method="POST" action="/auth/registrar">
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
 
         <label for="email">Email</label>
         <input type="email" id="email" name="email" placeholder="seu@email.com" required>
@@ -175,15 +161,14 @@
         <label for="tipo">Perfil</label>
         <select id="tipo" name="tipo">
             <option value="aluno">Aluno</option>
-            <option value="funcionario">Funcionário</option>
+            <option value="funcionario">Funcionario</option>
         </select>
 
         <button type="submit" class="btn-primary">Criar conta</button>
-        <a href="/auth/login" class="btn-secundario">Já tenho conta</a>
+        <a href="/auth/login" class="btn-secundario">Ja tenho conta</a>
     </form>
 
     {% else %}
-    <!-- FORMULARIO DE LOGIN -->
     <form method="POST" action="/auth/login">
         <input type="hidden" name="next_url" value="{{ next_url or '/' }}">
 
@@ -199,12 +184,7 @@
     </form>
 
     <div class="divisor">ou</div>
-
     <a href="/auth/registrar" class="btn-secundario">Criar conta</a>
-
-    <div class="link-alterar">
-        <a href="/">Continuar sem login →</a>
-    </div>
     {% endif %}
 </div>
 </body>
