@@ -8,8 +8,8 @@ Sistema para visualizacao de vagas de estacionamento no campus universitario em 
 
 | Aluno | Requisitos | Arquivos Principais |
 |---|---|---|
-| **Ruan M** | RF01 (Mapa de Vagas em Tempo Real) + RF03 (Vagas Reservadas) | `routes/mapa.py`, `routes/reservadas.py`, `models/vagas.py`, `templates/mapa.html`, `static/js/mapa.js` |
-| Aluno 2 | RF02 (Reporte Manual de Vagas) | *(a definir)* |
+| **Arthur Palma** | RF01 (Mapa de Vagas em Tempo Real) + RF03 (Vagas Reservadas) | `routes/mapa.py`, `routes/reservadas.py`, `models/vagas.py`, `templates/mapa.html`, `static/js/mapa.js` |
+| **Adolfo Mendonca** | RF02 (Reporte Manual de Vagas) | `routes/reservadas.py`, `models/vagas.py`, `static/js/mapa.js`, `templates/mapa.html`, `static/css/style.css`, `database.py` |
 | Aluno 3 | RF04 (Acesso Rapido) + RF05 (Multiplataforma) | *(a definir)* |
 
 ## Requisitos Implementados
@@ -20,6 +20,13 @@ Sistema para visualizacao de vagas de estacionamento no campus universitario em 
 - Resumo por setor com contadores e barra de progresso
 - Cache offline no localStorage para funcionamento com Wi-Fi instavel
 - Indicador de status online/offline
+
+### RF02 — Reporte Manual de Vagas
+- Atualizacao manual de status para vagas de alunos (livre/ocupada)
+- Reserva e desreserva manual de vagas de alunos
+- Regras de validacao para impedir reserva de vaga ocupada
+- Regras para impedir alteracao de status em vaga reservada por aluno
+- Endpoints dedicados para reservar e desreservar via API
 
 ### RF03 — Identificacao de Vagas Reservadas
 - Vagas de funcionarios exibidas em roxo com icone de cadeado
@@ -49,10 +56,10 @@ estacionamento-campus/
 │   └── vagas.py            # CRUD de vagas e setores
 ├── routes/
 │   ├── mapa.py             # RF01: rotas do mapa
-│   └── reservadas.py       # RF03: rotas de vagas reservadas
+│   └── reservadas.py       # RF02/RF03: status, reserva e restricoes
 ├── static/
 │   ├── css/style.css       # Estilos visuais
-│   └── js/mapa.js          # Polling AJAX, cache, modal
+│   └── js/mapa.js          # Polling AJAX, cache, modal e acoes de reserva
 └── templates/
     ├── base.html            # Layout base
     └── mapa.html            # Pagina principal do mapa
@@ -84,3 +91,5 @@ O banco de dados SQLite e criado automaticamente na primeira execucao com dados 
 | GET | `/api/vagas/reservadas` | Vagas de funcionarios |
 | GET | `/api/vagas/<id>/info` | Detalhes de uma vaga |
 | POST | `/api/vagas/<id>/status` | Atualizar status (bloqueado para reservadas) |
+| POST | `/api/vagas/<id>/reservar` | Reservar vaga de aluno livre |
+| POST | `/api/vagas/<id>/desreservar` | Remover reserva de vaga de aluno |
